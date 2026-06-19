@@ -8,6 +8,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.ui.Modifier
+import com.genesis.showroom.ui.GenesisApp
 import com.genesis.showroom.ui.theme.GenesisBlack
 import com.genesis.showroom.ui.theme.GenesisTheme
 
@@ -22,7 +23,9 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier
                         .fillMaxSize()
                         .background(GenesisBlack),
-                )
+                ) {
+                    GenesisApp()
+                }
             }
         }
     }
