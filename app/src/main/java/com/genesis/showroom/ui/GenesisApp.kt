@@ -26,6 +26,7 @@ import com.genesis.showroom.data.VehicleRepository
 import com.genesis.showroom.ui.components.LanguageToggle
 import com.genesis.showroom.ui.language.GenesisLanguage
 import com.genesis.showroom.ui.language.GenesisLanguageProvider
+import com.genesis.showroom.ui.screens.specboard.SpecBoardScreen
 import com.genesis.showroom.ui.screens.vehicles.VehicleExplorerScreen
 import com.genesis.showroom.ui.screens.welcome.WelcomeScreen
 
@@ -61,25 +62,36 @@ fun GenesisApp(
                     )
                     AppScreen.VEHICLES -> VehicleExplorerScreen(
                         repository = repository,
-                        onSelectVehicle = { vehicle -> selectedVehicle = vehicle },
+                        onSelectVehicle = { vehicle ->
+                            selectedVehicle = vehicle
+                            screen = AppScreen.SPEC_BOARD
+                        },
                     )
-                    AppScreen.SPEC_BOARD -> VehicleExplorerScreen(
-                        repository = repository,
-                        onSelectVehicle = { vehicle -> selectedVehicle = vehicle },
-                    )
+                    AppScreen.SPEC_BOARD -> {
+                        val vehicle = selectedVehicle
+                        if (vehicle != null) {
+                            SpecBoardScreen(
+                                vehicle = vehicle,
+                                onBack = { screen = AppScreen.VEHICLES },
+                                onChat = onChat,
+                            )
+                        }
+                    }
                 }
             }
 
-            Box(
-                modifier = Modifier
-                    .align(Alignment.TopEnd)
-                    .statusBarsPadding()
-                    .padding(top = 24.dp, end = 24.dp),
-            ) {
-                CompositionLocalProvider(
-                    LocalLayoutDirection provides GenesisLanguage.layoutDirection,
+            if (screen != AppScreen.SPEC_BOARD) {
+                Box(
+                    modifier = Modifier
+                        .align(Alignment.TopEnd)
+                        .statusBarsPadding()
+                        .padding(top = 24.dp, end = 24.dp),
                 ) {
-                    LanguageToggle()
+                    CompositionLocalProvider(
+                        LocalLayoutDirection provides GenesisLanguage.layoutDirection,
+                    ) {
+                        LanguageToggle()
+                    }
                 }
             }
         }
