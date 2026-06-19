@@ -20,10 +20,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.genesis.showroom.data.AppScreen
+import com.genesis.showroom.data.ChatRepository
 import com.genesis.showroom.data.Vehicle
 import com.genesis.showroom.data.VehicleRepository
 import com.genesis.showroom.ui.components.LanguageToggle
+import com.genesis.showroom.ui.overlay.ChatViewModel
+import com.genesis.showroom.ui.overlay.ChatViewModelFactory
 import com.genesis.showroom.ui.overlay.GenesisAiOverlay
 import com.genesis.showroom.ui.language.GenesisLanguage
 import com.genesis.showroom.ui.language.GenesisLanguageProvider
@@ -34,9 +38,14 @@ import com.genesis.showroom.ui.screens.welcome.WelcomeScreen
 @Composable
 fun GenesisApp(
     repository: VehicleRepository,
+    chatRepository: ChatRepository,
     modifier: Modifier = Modifier,
 ) {
     GenesisLanguageProvider {
+        val chatViewModel: ChatViewModel = viewModel(
+            factory = ChatViewModelFactory(chatRepository),
+        )
+
         var screen by remember { mutableStateOf(AppScreen.WELCOME) }
         var selectedVehicle by remember { mutableStateOf<Vehicle?>(null) }
         var isChatOpen by remember { mutableStateOf(false) }
@@ -85,6 +94,8 @@ fun GenesisApp(
                 isOpen = isChatOpen,
                 onClose = { isChatOpen = false },
                 currentVehicle = selectedVehicle,
+                chatViewModel = chatViewModel,
+                chatRepository = chatRepository,
             )
 
             if (screen != AppScreen.SPEC_BOARD && !isChatOpen) {

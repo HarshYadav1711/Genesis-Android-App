@@ -86,12 +86,33 @@ enum class VoiceState {
 }
 
 data class ChatMessage(
+    val id: String = java.util.UUID.randomUUID().toString(),
     val role: ChatRole,
     val content: String,
     val isError: Boolean = false,
+    val timestamp: Long = System.currentTimeMillis(),
 )
 
 enum class ChatRole {
     USER,
     ASSISTANT,
 }
+
+data class CustomerProfile(
+    val intent: String = "browsing",
+    val vehiclePreferences: List<String> = emptyList(),
+    val priorities: List<String> = emptyList(),
+    val budgetLevel: String = "mid",
+    val recommendedAction: String = "engage",
+    val leadScore: String = "cold",
+    val shouldCaptureLead: Boolean = false,
+    val conversationInsights: String = "",
+    val messageCount: Int = 0,
+    val leadCaptured: Boolean = false,
+)
+
+data class SendMessageResult(
+    val text: String,
+    val profile: CustomerProfile?,
+    val shouldCaptureLead: Boolean,
+)

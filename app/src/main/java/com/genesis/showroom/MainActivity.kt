@@ -8,7 +8,10 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.ui.Modifier
+import com.genesis.showroom.data.ChatRepository
+import com.genesis.showroom.data.GenesisConfig
 import com.genesis.showroom.data.VehicleRepository
+import com.genesis.showroom.data.api.GenesisApiService
 import com.genesis.showroom.ui.GenesisApp
 import com.genesis.showroom.ui.theme.GenesisBlack
 import com.genesis.showroom.ui.theme.GenesisTheme
@@ -19,6 +22,9 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
 
         val repository = VehicleRepository(applicationContext)
+        val chatRepository = ChatRepository(
+            GenesisApiService(baseUrl = GenesisConfig.BASE_URL),
+        )
 
         setContent {
             GenesisTheme {
@@ -27,7 +33,10 @@ class MainActivity : ComponentActivity() {
                         .fillMaxSize()
                         .background(GenesisBlack),
                 ) {
-                    GenesisApp(repository = repository)
+                    GenesisApp(
+                        repository = repository,
+                        chatRepository = chatRepository,
+                    )
                 }
             }
         }

@@ -47,6 +47,7 @@ com.genesis.showroom:string/m3c_date_picker_switch_to_year_selection = 0x7f09002
 com.genesis.showroom:string/m3c_date_picker_switch_to_day_selection = 0x7f090024
 com.genesis.showroom:string/m3c_date_picker_switch_to_calendar_mode = 0x7f090023
 com.genesis.showroom:string/m3c_date_picker_scroll_to_later_years = 0x7f090022
+com.genesis.showroom:xml/network_security_config = 0x7f0c0000
 com.genesis.showroom:string/m3c_date_picker_scroll_to_earlier_years = 0x7f090021
 com.genesis.showroom:string/m3c_date_picker_headline_description = 0x7f09001e
 com.genesis.showroom:string/m3c_date_input_invalid_not_allowed = 0x7f090018
