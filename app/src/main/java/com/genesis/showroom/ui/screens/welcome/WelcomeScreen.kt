@@ -41,11 +41,12 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.genesis.showroom.data.AppLanguage
 import com.genesis.showroom.ui.components.GenesisLogo
 import com.genesis.showroom.ui.components.welcome.WelcomeBackground
 import com.genesis.showroom.ui.designsystem.component.GenesisOutlineButton
 import com.genesis.showroom.ui.designsystem.component.GenesisPrimaryButton
+import com.genesis.showroom.ui.language.GenesisLanguage
+import com.genesis.showroom.ui.language.GenesisLanguageProvider
 import com.genesis.showroom.ui.theme.GenesisCopper
 import com.genesis.showroom.ui.theme.GenesisFontFamily
 import com.genesis.showroom.ui.theme.GenesisGold
@@ -55,11 +56,11 @@ import com.genesis.showroom.ui.theme.GenesisTheme
 
 @Composable
 fun WelcomeScreen(
-    language: AppLanguage,
     onExplore: () -> Unit,
     onChat: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val isArabic = GenesisLanguage.isArabic
     var animateIn by remember { mutableStateOf(false) }
     LaunchedEffect(Unit) { animateIn = true }
 
@@ -75,18 +76,18 @@ fun WelcomeScreen(
 
             WelcomeDivider(visible = animateIn)
 
-            WelcomeHeadline(language = language, visible = animateIn)
+            WelcomeHeadline(isArabic = isArabic, visible = animateIn)
 
-            WelcomeSubtitle(language = language, visible = animateIn)
+            WelcomeSubtitle(isArabic = isArabic, visible = animateIn)
 
             WelcomeCtas(
-                language = language,
+                isArabic = isArabic,
                 visible = animateIn,
                 onExplore = onExplore,
                 onChat = onChat,
             )
 
-            WelcomeAvailabilityFooter(language = language, visible = animateIn)
+            WelcomeAvailabilityFooter(isArabic = isArabic, visible = animateIn)
         }
     }
 }
@@ -149,7 +150,7 @@ private fun WelcomeDivider(visible: Boolean) {
 }
 
 @Composable
-private fun WelcomeHeadline(language: AppLanguage, visible: Boolean) {
+private fun WelcomeHeadline(isArabic: Boolean, visible: Boolean) {
     val alpha by animateFloatAsState(
         targetValue = if (visible) 1f else 0f,
         animationSpec = tween(
@@ -178,7 +179,7 @@ private fun WelcomeHeadline(language: AppLanguage, visible: Boolean) {
             .padding(bottom = 12.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        if (language.isArabic) {
+        if (isArabic) {
             Text(
                 text = "تجربة Genesis الشخصية",
                 fontFamily = GenesisFontFamily.Display,
@@ -217,7 +218,7 @@ private fun WelcomeHeadline(language: AppLanguage, visible: Boolean) {
 }
 
 @Composable
-private fun WelcomeSubtitle(language: AppLanguage, visible: Boolean) {
+private fun WelcomeSubtitle(isArabic: Boolean, visible: Boolean) {
     val alpha by animateFloatAsState(
         targetValue = if (visible) 1f else 0f,
         animationSpec = tween(
@@ -229,7 +230,7 @@ private fun WelcomeSubtitle(language: AppLanguage, visible: Boolean) {
     )
 
     Text(
-        text = if (language.isArabic) "صُنع للاستثنائي" else "Crafted for the exceptional",
+        text = if (isArabic) "صُنع للاستثنائي" else "Crafted for the exceptional",
         modifier = Modifier
             .alpha(alpha)
             .padding(bottom = 64.dp),
@@ -244,7 +245,7 @@ private fun WelcomeSubtitle(language: AppLanguage, visible: Boolean) {
 
 @Composable
 private fun WelcomeCtas(
-    language: AppLanguage,
+    isArabic: Boolean,
     visible: Boolean,
     onExplore: () -> Unit,
     onChat: () -> Unit,
@@ -278,12 +279,12 @@ private fun WelcomeCtas(
         verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
         GenesisPrimaryButton(
-            text = if (language.isArabic) "استعرض سياراتنا" else "Explore Our Vehicles",
+            text = if (isArabic) "استعرض سياراتنا" else "Explore Our Vehicles",
             onClick = onExplore,
             modifier = Modifier.widthIn(min = 220.dp),
         )
         GenesisOutlineButton(
-            text = if (language.isArabic) "تحدث مع Genesis AI" else "Talk to Genesis AI",
+            text = if (isArabic) "تحدث مع Genesis AI" else "Talk to Genesis AI",
             onClick = onChat,
             modifier = Modifier.widthIn(min = 220.dp),
             leadingIcon = {
@@ -298,7 +299,7 @@ private fun WelcomeCtas(
 }
 
 @Composable
-private fun WelcomeAvailabilityFooter(language: AppLanguage, visible: Boolean) {
+private fun WelcomeAvailabilityFooter(isArabic: Boolean, visible: Boolean) {
     val alpha by animateFloatAsState(
         targetValue = if (visible) 1f else 0f,
         animationSpec = tween(
@@ -317,7 +318,7 @@ private fun WelcomeAvailabilityFooter(language: AppLanguage, visible: Boolean) {
         verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         Text(
-            text = if (language.isArabic) {
+            text = if (isArabic) {
                 "متاح في دبي • أبوظبي • الشارقة"
             } else {
                 "Available in Dubai • Abu Dhabi • Sharjah"
@@ -365,10 +366,11 @@ private fun PulsingDot(delayMillis: Int) {
 @Composable
 private fun WelcomeScreenPreview() {
     GenesisTheme {
-        WelcomeScreen(
-            language = AppLanguage.EN,
-            onExplore = {},
-            onChat = {},
-        )
+        GenesisLanguageProvider {
+            WelcomeScreen(
+                onExplore = {},
+                onChat = {},
+            )
+        }
     }
 }
