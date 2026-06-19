@@ -24,6 +24,7 @@ import com.genesis.showroom.data.AppScreen
 import com.genesis.showroom.data.Vehicle
 import com.genesis.showroom.data.VehicleRepository
 import com.genesis.showroom.ui.components.LanguageToggle
+import com.genesis.showroom.ui.overlay.GenesisAiOverlay
 import com.genesis.showroom.ui.language.GenesisLanguage
 import com.genesis.showroom.ui.language.GenesisLanguageProvider
 import com.genesis.showroom.ui.screens.specboard.SpecBoardScreen
@@ -34,11 +35,11 @@ import com.genesis.showroom.ui.screens.welcome.WelcomeScreen
 fun GenesisApp(
     repository: VehicleRepository,
     modifier: Modifier = Modifier,
-    onChat: () -> Unit = {},
 ) {
     GenesisLanguageProvider {
         var screen by remember { mutableStateOf(AppScreen.WELCOME) }
         var selectedVehicle by remember { mutableStateOf<Vehicle?>(null) }
+        var isChatOpen by remember { mutableStateOf(false) }
 
         Box(modifier = modifier.fillMaxSize()) {
             AnimatedContent(
@@ -58,7 +59,7 @@ fun GenesisApp(
                 when (currentScreen) {
                     AppScreen.WELCOME -> WelcomeScreen(
                         onExplore = { screen = AppScreen.VEHICLES },
-                        onChat = onChat,
+                        onChat = { isChatOpen = true },
                     )
                     AppScreen.VEHICLES -> VehicleExplorerScreen(
                         repository = repository,
@@ -73,14 +74,20 @@ fun GenesisApp(
                             SpecBoardScreen(
                                 vehicle = vehicle,
                                 onBack = { screen = AppScreen.VEHICLES },
-                                onChat = onChat,
+                                onChat = { isChatOpen = true },
                             )
                         }
                     }
                 }
             }
 
-            if (screen != AppScreen.SPEC_BOARD) {
+            GenesisAiOverlay(
+                isOpen = isChatOpen,
+                onClose = { isChatOpen = false },
+                currentVehicle = selectedVehicle,
+            )
+
+            if (screen != AppScreen.SPEC_BOARD && !isChatOpen) {
                 Box(
                     modifier = Modifier
                         .align(Alignment.TopEnd)
